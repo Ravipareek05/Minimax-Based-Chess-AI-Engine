@@ -72,6 +72,7 @@ The evaluation function considers:
 ---
 
 ## 📂 Project Structure
+
 Minimax-Based-Chess-AI-Engine/
 │
 ├── ChessMain.py          # Main game loop and UI
