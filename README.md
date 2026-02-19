@@ -72,3 +72,16 @@ The evaluation function considers:
 ---
 
 ## 📂 Project Structure
+Minimax-Based-Chess-AI-Engine/
+│
+├── ChessMain.py          # Main game loop and UI
+├── ChessEngine.py        # Game logic and rules
+├── ChienKoNgu.py         # Minimax AI implementation
+├── images/               # Chess piece images
+└── README.md
+
+2️⃣ Install Dependencies
+pip install pygame
+
+3️⃣ Run the Game
+python3 ChessMain.py
