@@ -61,8 +61,14 @@ bashpip install pygame
 bashpython3 ChessMain.py
 The game window will open and you can start playing against the AI.
 
-🎮 Controls
-KeyActionZUndo last moveRReset the gameQSwitch to AI vs AI modeESwitch to Human vs AI mode
+## 🎮 Controls
+
+| Key | Action |
+|-----|--------|
+| Z   | Undo last move |
+| R   | Reset the game |
+| Q   | AI vs AI mode |
+| E   | Human vs AI mode |
 
 🎓 Educational Value
 This project demonstrates:
