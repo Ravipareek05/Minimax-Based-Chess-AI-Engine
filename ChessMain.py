@@ -1,6 +1,3 @@
-
-Copy
-
 # ============================================================
 # ChessMain.py - Main Game Loop & UI
 # Author: Ravi Pareek
