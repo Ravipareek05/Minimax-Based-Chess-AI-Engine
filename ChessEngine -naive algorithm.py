@@ -1,3 +1,10 @@
+# ============================================================
+# ChessEngine_naive_algorithm.py - Naive Chess Engine (Reference)
+# Author: Ravi Pareek
+# B.Tech Computer Engineering
+# Thapar Institute of Engineering & Technology
+# ============================================================
+ 
 class GameState():
     def __init__(self):
         self.board = [
@@ -19,7 +26,7 @@ class GameState():
         self.checkMate = False
         self.staleMate = False
         self.enpassantPossible = ()
-
+ 
     def makeMove(self, move):
         self.board[move.startRow][move.startCol] = "--"
         self.board[move.endRow][move.endCol] = move.pieceMoved
@@ -29,7 +36,7 @@ class GameState():
             self.whiteKingLocate = (move.endRow, move.endCol)
         if move.pieceMoved == "bK":
             self.blackKingLocate = (move.endRow, move.endCol)
-
+ 
         # Enpassant Move
         if move.isEnpassantMove:
             print("HERE")
@@ -39,7 +46,7 @@ class GameState():
             self.enpassantPossible = ((move.startRow + move.endRow) // 2, move.endCol)
         else:
             self.enpassantPossible = ()  # not en passant move
-
+ 
     def undoMove(self):
         if len(self.moveLog) != 0:
             move = self.moveLog.pop()
@@ -50,15 +57,15 @@ class GameState():
                 self.whiteKingLocate = (move.startRow, move.startCol)
             if move.pieceMoved == "bK":
                 self.blackKingLocate = (move.startRow, move.startCol)
-
+ 
             if move.isEnpassantMove:
                 self.board[move.endRow][move.endCol] = "--"
                 self.board[move.startRow][move.endCol] = move.pieceCaptured
                 self.enpassantPossible = (move.endRow, move.endCol)
-
+ 
             if move.pieceMoved[1] == 'p' and abs(move.startRow - move.endRow) == 2:
                 self.enpassantPossible = ()
-
+ 
     def getValidMoves(self):
         tempEnpassantPossible = self.enpassantPossible
         moves = self.getAllPossibleMoves()
@@ -79,16 +86,16 @@ class GameState():
         else:
             self.checkMate = False
             self.staleMate = False
-
+ 
         self.enpassantPossible = tempEnpassantPossible
         return moves
-
+ 
     def inCheck(self):
         if self.whiteToMove:
             return self.sqUnderAttack(self.whiteKingLocate[0], self.whiteKingLocate[1])
         else:
             return self.sqUnderAttack(self.blackKingLocate[0], self.blackKingLocate[1])
-
+ 
     def sqUnderAttack(self, r, c):
         self.whiteToMove = not self.whiteToMove
         oppMoves = self.getAllPossibleMoves()
@@ -97,11 +104,11 @@ class GameState():
             if move.endRow == r and move.endCol == c:
                 return True
         return False
-
-
-
-
-
+ 
+ 
+ 
+ 
+ 
     def getAllPossibleMoves(self):
         moves = []
         for r in range(len(self.board)):
@@ -111,7 +118,7 @@ class GameState():
                     piece = self.board[r][c][1]
                     self.moveFunctions[piece](r, c, moves)
         return moves
-
+ 
     def getPawnMoves(self, r, c, moves):
         if self.whiteToMove:
             if self.board[r-1][c] == "--":
@@ -143,8 +150,8 @@ class GameState():
                     moves.append(Move((r, c), (r+1, c+1), self.board))
                 elif (r + 1, c + 1) == self.enpassantPossible:
                     moves.append(Move((r, c), (r + 1, c + 1), self.board, isEnpassantMove=True))
-
-
+ 
+ 
     def getRookMoves(self, r, c, moves):
         straightDirections = ((-1, 0), (1, 0), (0, -1), (0, 1))
         enemyColor = 'b' if self.whiteToMove else 'w'
@@ -173,7 +180,7 @@ class GameState():
                 endPiece = self.board[endRow][endCol]
                 if endPiece[0] != allyColor:
                     moves.append(Move((r, c), (endRow, endCol), self.board))
-
+ 
     def getBishopMoves(self, r, c, moves):
         diagonalDirections = ((-1, -1), (1, 1), (1, -1), (-1, 1))
         enemyColor = 'b' if self.whiteToMove else 'w'
@@ -192,11 +199,11 @@ class GameState():
                         break
                 else:
                     break
-
+ 
     def getQueenMoves(self, r, c, moves):
         self.getRookMoves(r, c, moves)
         self.getBishopMoves(r, c, moves)
-
+ 
     def getKingMoves(self, r, c, moves):
         kingDirections = ((-1, 0), (1, 0), (0, -1), (0, 1), (-1, -1), (1, 1), (1, -1), (-1, 1))
         allyColor = 'w' if self.whiteToMove else 'b'
@@ -207,13 +214,13 @@ class GameState():
                 endPiece = self.board[endRow][endCol]
                 if endPiece[0] != allyColor:
                     moves.append(Move((r, c), (endRow, endCol), self.board))
-
+ 
 class Move():
     ranksToRows = {"1": 7, "2": 6, "3": 5, "4": 4, "5": 3, "6": 2, "7": 1, "8": 0}
     rowsToRanks = {v: k for k, v in ranksToRows.items()}
     filesToCols = {"a": 0, "b": 1, "c": 2, "d": 3, "e": 4, "f": 5, "g": 6, "h": 7}
     colsToFiles = {v: k for k, v in filesToCols.items()}
-
+ 
     def __init__(self, startSq, endSq, board, isEnpassantMove = False):
         self.startRow = startSq[0]
         self.startCol = startSq[1]
@@ -225,13 +232,13 @@ class Move():
         if self.isEnpassantMove:
             self.pieceCaptured = "wp" if self.pieceMoved == "bp" else "bp"
         self.moveID = self.startCol * 1000 + self.startRow * 100 + self.endCol * 10 + self.endRow
-
+ 
     def __eq__(self, other):
         if isinstance(other, Move):
             return self.moveID == other.moveID
         else:
             return False
-
+ 
     def getChessNotation(self):
         return self.getFileRank(self.startRow, self.startCol) + "-" + self.getFileRank(self.endRow, self.endCol)
     def getFileRank(self, row, col):

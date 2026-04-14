@@ -1,9 +1,19 @@
+
+Copy
+
+# ============================================================
+# ChessMain.py - Main Game Loop & UI
+# Author: Ravi Pareek
+# B.Tech Computer Engineering
+# Thapar Institute of Engineering & Technology
+# ============================================================
+ 
 import math
 import pygame as p
 import ChessEngine
-import ChienKoNgu
-
-
+import ChessAI
+ 
+ 
 WIDTH = HEIGHT = 512
 MOVE_LOG_PANEL_WIDTH = 290
 MOVE_LOG_PANEL_HEIGHT = HEIGHT
@@ -11,12 +21,12 @@ DIMENSION = 8
 SQ_SIZE = HEIGHT // DIMENSION
 MAX_FPS = 240
 IMAGES = {}
-
+ 
 def load_images():
     pieces = ["wp", "wR", "wN", "wB", "wQ", "wK", "bp", "bR", "bN", "bB", "bQ", "bK"]
     for piece in pieces:
         IMAGES[piece] = p.transform.scale(p.image.load("images/" + piece + ".png"), (SQ_SIZE, SQ_SIZE))
-
+ 
 def main():
     p.init()
     screen = p.display.set_mode((WIDTH + MOVE_LOG_PANEL_WIDTH, HEIGHT))
@@ -32,7 +42,7 @@ def main():
     load_images()
     sqSelected = ()
     playerClicks = []
-
+ 
     running = True
     while running:
         humanTurn = (gs.whiteToMove and playerOne) or (not gs.whiteToMove and playerTwo)
@@ -86,28 +96,28 @@ def main():
                 elif e.key == p.K_e:
                     playerOne = True
                     playerTwo = False
-
+ 
         if moveMade:
             if animate:
                 animateMove(gs.moveLog[-1], screen, gs.board, clock)
             validMoves = gs.getValidMoves()
             moveMade = False
             animate = False
-
+ 
         ''' AI move finder '''
         if not gameOver and not humanTurn:
-            AIMove = ChienKoNgu.findBestMoveMinimax(gs, validMoves)
-            #AIMove = ChienKoNgu.findRandomMove(validMoves)
+            AIMove = ChessAI.findBestMoveMinimax(gs, validMoves)
+            #AIMove = ChessAI.findRandomMove(validMoves)
             if AIMove is None:   #when begin the game
-                AIMove = ChienKoNgu.findRandomMove(validMoves)
+                AIMove = ChessAI.findRandomMove(validMoves)
             gs.makeMove(AIMove)
             moveMade = True
             animate = True
             print(AIMove.getChessNotation())
-
-
+ 
+ 
         drawGameState(screen, gs, validMoves, sqSelected)
-
+ 
         if gs.checkMate or gs.staleMate:
             gameOver = True
             if gs.staleMate:
@@ -118,11 +128,11 @@ def main():
                     drawEndGameText(screen, "BLACK WIN")
                 else:
                     drawEndGameText(screen, "WHITE WIN")
-
-
+ 
+ 
         clock.tick(MAX_FPS)
         p.display.flip()
-
+ 
 def highlightMove(screen, gs, validMoves, sqSelected):
     sq = p.Surface((SQ_SIZE, SQ_SIZE))
     sq.set_alpha(100)
@@ -137,7 +147,7 @@ def highlightMove(screen, gs, validMoves, sqSelected):
             for move in validMoves:
                 if move.startRow == r and move.startCol == c:
                     screen.blit(sq, (move.endCol * SQ_SIZE, move.endRow * SQ_SIZE))
-
+ 
     if gs.inCheck:
         if gs.whiteToMove:
             sq.fill(p.Color("red"))
@@ -150,8 +160,8 @@ def highlightMove(screen, gs, validMoves, sqSelected):
         sq.fill(p.Color("yellow"))
         screen.blit(sq, (gs.moveLog[-1].startCol * SQ_SIZE, gs.moveLog[-1].startRow * SQ_SIZE))
         screen.blit(sq, (gs.moveLog[-1].endCol * SQ_SIZE, gs.moveLog[-1].endRow * SQ_SIZE))
-
-
+ 
+ 
 def animateMove(move, screen, board, clock):
     colors = [p.Color("white"), p.Color("grey")]
     dR = move.endRow - move.startRow
@@ -177,27 +187,27 @@ def animateMove(move, screen, board, clock):
             screen.blit(IMAGES[move.pieceMoved], p.Rect(c*SQ_SIZE, r*SQ_SIZE, SQ_SIZE, SQ_SIZE))
         p.display.flip()
         clock.tick(144)
-
+ 
 def drawGameState(screen, gs, validMoves, sqSelected):
     drawBoard(screen)
     highlightMove(screen, gs, validMoves, sqSelected)
     drawPieces(screen, gs.board)
     drawMoveLog(screen, gs)
-
+ 
 def drawBoard(screen):
     colors = [p.Color("white"), p.Color("grey")]
     for r in range(DIMENSION):
         for c in range(DIMENSION):
             color = colors[((r + c) % 2)]
             p.draw.rect(screen, color, p.Rect(c*SQ_SIZE, r*SQ_SIZE, SQ_SIZE, SQ_SIZE))
-
+ 
 def drawPieces(screen, board):
     for row in range(DIMENSION):
         for col in range(DIMENSION):
             piece = board[row][col]
             if piece != "--":
                 screen.blit(IMAGES[piece], p.Rect(col*SQ_SIZE, row*SQ_SIZE, SQ_SIZE, SQ_SIZE))
-
+ 
 def drawEndGameText(screen, text):
     font = p.font.SysFont("Verdana", 32, True, False)
     textObject = font.render(text, False, p.Color("black"))
@@ -205,7 +215,7 @@ def drawEndGameText(screen, text):
     screen.blit(textObject, textLocation)
     textObject = font.render(text, False, p.Color("red"))
     screen.blit(textObject, textLocation.move(2, 2))
-
+ 
 def drawMoveLog(screen, gs):
     moveLogRect = p.Rect(WIDTH, 0, MOVE_LOG_PANEL_WIDTH, MOVE_LOG_PANEL_HEIGHT)
     p.draw.rect(screen, p.Color("black"), moveLogRect)
@@ -231,7 +241,16 @@ def drawMoveLog(screen, gs):
         textLocation = moveLogRect.move(padding, textY)
         screen.blit(textObject, textLocation)
         textY += textObject.get_height() + lineSpacing
-
-
+ 
+ 
 if __name__ == "__main__":
     main()
+
+
+
+
+
+
+
+
+
