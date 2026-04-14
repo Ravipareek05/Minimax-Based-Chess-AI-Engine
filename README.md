@@ -53,6 +53,7 @@ This simulates strategic foresight and intelligent decision-making.
 ---
 
 ## 📂 Project Structure
+```
 Minimax-Based-Chess-AI-Engine/
 │
 ├── ChessMain.py                    # Main game loop and UI
@@ -61,7 +62,7 @@ Minimax-Based-Chess-AI-Engine/
 ├── ChessEngine_naive_algorithm.py  # Naive algorithm (reference)
 ├── images/                         # Chess piece images
 └── README.md
-
+```
 ---
 
 ## ⚙️ How to Run the Project
